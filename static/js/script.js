@@ -1,4 +1,4 @@
-const GAUGE_CIRCUMFERENCE = 251; // matches the arc path length in the SVG
+const GAUGE_CIRCUMFERENCE = 251;
 
 const tabButtons = document.querySelectorAll(".tab-btn");
 const tabContents = document.querySelectorAll(".tab-content");
@@ -7,11 +7,9 @@ const fileInput = document.getElementById("file-input");
 const previewStrip = document.getElementById("preview-strip");
 const previewImg = document.getElementById("preview-img");
 const rescanBtn = document.getElementById("rescan-btn");
-
 const video = document.getElementById("video");
 const canvas = document.getElementById("canvas");
 const shutterBtn = document.getElementById("shutter-btn");
-
 const tagCard = document.getElementById("tag-card");
 const tagId = document.getElementById("tag-id");
 const fieldSpecies = document.getElementById("field-species");
@@ -24,9 +22,6 @@ const tagFootnote = document.getElementById("tag-footnote");
 
 let mediaStream = null;
 
-// -------------------------------------------------------------
-// Tabs
-// -------------------------------------------------------------
 tabButtons.forEach((btn) => {
   btn.addEventListener("click", () => {
     tabButtons.forEach((b) => b.classList.remove("active"));
@@ -34,17 +29,11 @@ tabButtons.forEach((btn) => {
     btn.classList.add("active");
     document.getElementById(`tab-${btn.dataset.tab}`).classList.add("active");
 
-    if (btn.dataset.tab === "camera") {
-      startCamera();
-    } else {
-      stopCamera();
-    }
+    if (btn.dataset.tab === "camera") startCamera();
+    else stopCamera();
   });
 });
 
-// -------------------------------------------------------------
-// Dropzone / file upload
-// -------------------------------------------------------------
 dropzone.addEventListener("click", () => fileInput.click());
 
 dropzone.addEventListener("dragover", (e) => {
@@ -83,9 +72,6 @@ function handleFile(file) {
   sendToServer(file);
 }
 
-// -------------------------------------------------------------
-// Camera
-// -------------------------------------------------------------
 async function startCamera() {
   if (mediaStream) return;
   try {
@@ -117,9 +103,6 @@ shutterBtn.addEventListener("click", () => {
   }, "image/jpeg", 0.92);
 });
 
-// -------------------------------------------------------------
-// Prediction
-// -------------------------------------------------------------
 function resetTag() {
   tagCard.classList.remove("verdict-dog", "verdict-cat");
   fieldSpecies.textContent = "— — — —";
@@ -150,7 +133,11 @@ async function sendToServer(fileOrBlob) {
   formData.append("image", fileOrBlob, "capture.jpg");
 
   try {
-    const res = await fetch("/predict", { method: "POST", body: formData });
+    const res = await fetch("/predict", {
+      method: "POST",
+      body: formData
+    });
+
     if (!res.ok) throw new Error("Prediction failed");
     const data = await res.json();
     renderResult(data);
@@ -175,25 +162,24 @@ function renderResult(data) {
 
   const offset = GAUGE_CIRCUMFERENCE * (1 - data.confidence);
   gaugeFill.style.stroke = isDog ? "var(--dog)" : "var(--cat)";
-  gaugeFill.style.strokeDashoffset = GAUGE_CIRCUMFERENCE; // reset
+  gaugeFill.style.strokeDashoffset = GAUGE_CIRCUMFERENCE;
   requestAnimationFrame(() => {
     gaugeFill.style.strokeDashoffset = offset;
   });
+
   animateReadout(confidencePct);
 
   stampPlaceholder.style.opacity = "0";
   stampMark.textContent = isDog ? "Dog" : "Cat";
   stampMark.classList.remove("is-dog", "is-cat", "stamp-in");
   stampMark.classList.add(isDog ? "is-dog" : "is-cat");
-  // force reflow so the animation replays every time
   void stampMark.offsetWidth;
   stampMark.classList.add("stamp-in");
 
-  tagFootnote.textContent = confidencePct >= 90
-    ? "High confidence match"
-    : confidencePct >= 70
-      ? "Likely match"
-      : "Low confidence — try a clearer photo";
+  tagFootnote.textContent =
+    confidencePct >= 90 ? "High confidence match" :
+    confidencePct >= 70 ? "Likely match" :
+    "Low confidence — try a clearer photo";
 }
 
 function animateReadout(target) {

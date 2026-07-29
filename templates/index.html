@@ -1,121 +1,114 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pet Scanner — Cat or Dog</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,900&family=Work+Sans:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pet Scanner — Cat or Dog</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,900&family=Work+Sans:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
+  <div class="grain"></div>
 
-<div class="grain"></div>
+  <header class="topbar">
+    <div class="eyebrow">PET SCANNER · CAT OR DOG</div>
+  </header>
 
-<header class="topbar">
-  <div class="eyebrow">PET SCANNER · CAT OR DOG</div>
-</header>
+  <main class="stage">
+    <section class="intro">
+      <h1>What's in<br>the frame?</h1>
+      <p class="lede">Drop a photo, upload a file, or use your camera. The scanner reads the frame and stamps its verdict on the chart.</p>
+    </section>
 
-<main class="stage">
-
-  <section class="intro">
-    <h1>What's in<br>the frame?</h1>
-    <p class="lede">Drop a photo, upload a file, or use your camera. The scanner reads the frame and stamps its verdict on the chart.</p>
-  </section>
-
-  <section class="console">
-
-    <!-- LEFT: input panel -->
-    <div class="panel input-panel">
-      <div class="tabs">
-        <button class="tab-btn active" data-tab="upload">Upload</button>
-        <button class="tab-btn" data-tab="camera">Camera</button>
-      </div>
-
-      <div class="tab-content active" id="tab-upload">
-        <div class="dropzone" id="dropzone">
-          <svg class="paw-icon" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <ellipse cx="50" cy="62" rx="26" ry="21" fill="currentColor" opacity="0.9"/>
-            <ellipse cx="22" cy="35" rx="10" ry="13" fill="currentColor"/>
-            <ellipse cx="44" cy="20" rx="10" ry="13" fill="currentColor"/>
-            <ellipse cx="66" cy="20" rx="10" ry="13" fill="currentColor"/>
-            <ellipse cx="82" cy="38" rx="10" ry="13" fill="currentColor"/>
-          </svg>
-          <p class="dz-title">Drag a photo here</p>
-          <p class="dz-sub">or click to browse · JPG / PNG</p>
-          <input type="file" id="file-input" accept="image/*" hidden>
-        </div>
-      </div>
-
-      <div class="tab-content" id="tab-camera">
-        <div class="camera-wrap">
-          <video id="video" autoplay playsinline></video>
-          <canvas id="canvas" hidden></canvas>
-          <div class="camera-frame-corner tl"></div>
-          <div class="camera-frame-corner tr"></div>
-          <div class="camera-frame-corner bl"></div>
-          <div class="camera-frame-corner br"></div>
-        </div>
-        <button class="shutter-btn" id="shutter-btn">
-          <span class="shutter-ring"></span>
-          Capture
-        </button>
-      </div>
-
-      <div class="preview-strip" id="preview-strip" hidden>
-        <img id="preview-img" alt="Selected photo">
-        <button class="rescan-btn" id="rescan-btn">Scan another</button>
-      </div>
-    </div>
-
-    <!-- RIGHT: result tag -->
-    <div class="panel tag-panel">
-      <div class="tag-card" id="tag-card">
-        <div class="tag-hole"></div>
-        <div class="tag-header">
-          <span>ADOPTION CHART</span>
-          <span id="tag-id">NO. ---</span>
+    <section class="console">
+      <div class="panel input-panel">
+        <div class="tabs">
+          <button class="tab-btn active" data-tab="upload" type="button">Upload</button>
+          <button class="tab-btn" data-tab="camera" type="button">Camera</button>
         </div>
 
-        <div class="tag-body">
-          <div class="field-row">
-            <span class="field-label">SPECIES</span>
-            <span class="field-value" id="field-species">— — — —</span>
-          </div>
-          <div class="field-row">
-            <span class="field-label">CONFIDENCE</span>
-            <span class="field-value" id="field-confidence">— — %</span>
-          </div>
-
-          <div class="gauge-wrap">
-            <svg viewBox="0 0 200 110" class="gauge">
-              <path class="gauge-track" d="M20,100 A80,80 0 0,1 180,100" />
-              <path class="gauge-fill" id="gauge-fill" d="M20,100 A80,80 0 0,1 180,100" />
+        <div class="tab-content active" id="tab-upload">
+          <div class="dropzone" id="dropzone">
+            <svg class="paw-icon" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <ellipse cx="50" cy="62" rx="26" ry="21" fill="currentColor" opacity="0.9"/>
+              <ellipse cx="22" cy="35" rx="10" ry="13" fill="currentColor"/>
+              <ellipse cx="44" cy="20" rx="10" ry="13" fill="currentColor"/>
+              <ellipse cx="66" cy="20" rx="10" ry="13" fill="currentColor"/>
+              <ellipse cx="82" cy="38" rx="10" ry="13" fill="currentColor"/>
             </svg>
-            <div class="gauge-readout" id="gauge-readout">0%</div>
-          </div>
-
-          <div class="stamp-zone" id="stamp-zone">
-            <div class="stamp-placeholder" id="stamp-placeholder">AWAITING SCAN</div>
-            <div class="stamp-mark" id="stamp-mark"></div>
+            <p class="dz-title">Drag a photo here</p>
+            <p class="dz-sub">or click to browse · JPG / PNG</p>
+            <input type="file" id="file-input" name="image" accept="image/*" hidden>
           </div>
         </div>
 
-        <div class="tag-footer">
-          <span id="tag-footnote">Insert a photo to begin analysis</span>
+        <div class="tab-content" id="tab-camera">
+          <div class="camera-wrap">
+            <video id="video" autoplay playsinline></video>
+            <canvas id="canvas" hidden></canvas>
+            <div class="camera-frame-corner tl"></div>
+            <div class="camera-frame-corner tr"></div>
+            <div class="camera-frame-corner bl"></div>
+            <div class="camera-frame-corner br"></div>
+          </div>
+          <button class="shutter-btn" id="shutter-btn" type="button">
+            <span class="shutter-ring"></span>
+            Capture
+          </button>
+        </div>
+
+        <div class="preview-strip" id="preview-strip" hidden>
+          <img id="preview-img" alt="Selected photo">
+          <button class="rescan-btn" id="rescan-btn" type="button">Scan another</button>
         </div>
       </div>
-    </div>
 
-  </section>
+      <div class="panel tag-panel">
+        <div class="tag-card" id="tag-card">
+          <div class="tag-hole"></div>
+          <div class="tag-header">
+            <span>ADOPTION CHART</span>
+            <span id="tag-id">NO. ---</span>
+          </div>
 
-</main>
+          <div class="tag-body">
+            <div class="field-row">
+              <span class="field-label">SPECIES</span>
+              <span class="field-value" id="field-species">— — — —</span>
+            </div>
+            <div class="field-row">
+              <span class="field-label">CONFIDENCE</span>
+              <span class="field-value" id="field-confidence">— — %</span>
+            </div>
 
-<footer class="foot">
-  <span>Built by Stuti Khanna</span>
-</footer>
+            <div class="gauge-wrap">
+              <svg viewBox="0 0 200 110" class="gauge">
+                <path class="gauge-track" d="M20,100 A80,80 0 0,1 180,100" />
+                <path class="gauge-fill" id="gauge-fill" d="M20,100 A80,80 0 0,1 180,100" />
+              </svg>
+              <div class="gauge-readout" id="gauge-readout">0%</div>
+            </div>
 
-<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+            <div class="stamp-zone" id="stamp-zone">
+              <div class="stamp-placeholder" id="stamp-placeholder">AWAITING SCAN</div>
+              <div class="stamp-mark" id="stamp-mark"></div>
+            </div>
+          </div>
+
+          <div class="tag-footer">
+            <span id="tag-footnote">Insert a photo to begin analysis</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <span>Built by Stuti Khanna</span>
+  </footer>
+
+  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>
 </html>
