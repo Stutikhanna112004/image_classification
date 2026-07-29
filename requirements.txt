@@ -1,4 +1,4 @@
-tensorflow>=2.15
+tensorflow-cpu
 flask
 pillow
 numpy
