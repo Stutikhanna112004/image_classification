@@ -123,6 +123,13 @@ function randomTagId() {
   return "NO. " + Math.floor(1000 + Math.random() * 8999);
 }
 
+
+if (!fileOrBlob) {
+  console.error("No file/blob passed to sendToServer");
+  tagFootnote.textContent = "No image selected";
+  return;
+}
+console.log("Uploading:", fileOrBlob);
 async function sendToServer(fileOrBlob) {
   stampPlaceholder.textContent = "SCANNING…";
   stampPlaceholder.style.opacity = "0.7";
