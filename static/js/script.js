@@ -28,7 +28,6 @@ tabButtons.forEach((btn) => {
     tabContents.forEach((c) => c.classList.remove("active"));
     btn.classList.add("active");
     document.getElementById(`tab-${btn.dataset.tab}`).classList.add("active");
-
     if (btn.dataset.tab === "camera") startCamera();
     else stopCamera();
   });
@@ -53,7 +52,8 @@ dropzone.addEventListener("drop", (e) => {
 });
 
 fileInput.addEventListener("change", () => {
-  if (fileInput.files[0]) handleFile(fileInput.files[0]);
+  const file = fileInput.files[0];
+  if (file) handleFile(file);
 });
 
 rescanBtn.addEventListener("click", () => {
@@ -75,7 +75,9 @@ function handleFile(file) {
 async function startCamera() {
   if (mediaStream) return;
   try {
-    mediaStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
+    mediaStream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: "environment" }
+    });
     video.srcObject = mediaStream;
   } catch (err) {
     tagFootnote.textContent = "Camera unavailable — check browser permissions";
@@ -97,6 +99,10 @@ shutterBtn.addEventListener("click", () => {
   ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
   canvas.toBlob((blob) => {
+    if (!blob) {
+      tagFootnote.textContent = "Could not capture image";
+      return;
+    }
     previewImg.src = canvas.toDataURL("image/jpeg");
     previewStrip.hidden = false;
     sendToServer(blob);
@@ -123,18 +129,12 @@ function randomTagId() {
   return "NO. " + Math.floor(1000 + Math.random() * 8999);
 }
 
-
-if (!fileOrBlob) {
-  console.error("No file/blob passed to sendToServer");
-  tagFootnote.textContent = "No image selected";
-  return;
-}
-
-console.log("upload started", fileOrBlob);
-console.log("formData ready", formData.get("image"));  
-
-console.log("Uploading:", fileOrBlob);
 async function sendToServer(fileOrBlob) {
+  if (!fileOrBlob) {
+    tagFootnote.textContent = "No image selected";
+    return;
+  }
+
   stampPlaceholder.textContent = "SCANNING…";
   stampPlaceholder.style.opacity = "0.7";
   tagFootnote.textContent = "Reading the frame…";
@@ -149,11 +149,12 @@ async function sendToServer(fileOrBlob) {
       body: formData
     });
 
-    if (!res.ok) throw new Error("Prediction failed");
     const data = await res.json();
+    if (!res.ok) throw new Error(data.error || "Prediction failed");
     renderResult(data);
   } catch (err) {
-    tagFootnote.textContent = "Scan failed — is the server running?";
+    console.error(err);
+    tagFootnote.textContent = "Scan failed — check server";
     stampPlaceholder.textContent = "ERROR";
   }
 }

@@ -6,6 +6,8 @@ from PIL import Image
 import numpy as np
 import tensorflow as tf
 
+os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
+
 IMG_SIZE = (160, 160)
 MODEL_PATH = os.path.join(os.path.dirname(__file__), "cat_dogs_model.keras")
 CLASS_NAMES = ["cat", "dog"]
@@ -18,17 +20,16 @@ print("Model loaded.")
 
 def predict_image(pil_image: Image.Image):
     img = pil_image.convert("RGB").resize(IMG_SIZE)
-    img_array = tf.keras.utils.img_to_array(img)
-    img_array = img_array / 255.0
+    img_array = tf.keras.utils.img_to_array(img) / 255.0
     img_array = np.expand_dims(img_array, axis=0)
 
     raw = float(model.predict(img_array, verbose=0)[0][0])
 
     if raw > 0.5:
-        label = CLASS_NAMES[1]
+        label = "dog"
         confidence = raw
     else:
-        label = CLASS_NAMES[0]
+        label = "cat"
         confidence = 1 - raw
 
     return label, confidence, raw
@@ -43,7 +44,7 @@ def predict():
     print(request.files)
 
     if "image" not in request.files:
-        return jsonify({"error": "No image provided"}), 400
+      return jsonify({"error": "No image provided"}), 400
 
     file = request.files["image"]
 
