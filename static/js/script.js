@@ -129,6 +129,10 @@ if (!fileOrBlob) {
   tagFootnote.textContent = "No image selected";
   return;
 }
+
+console.log("upload started", fileOrBlob);
+console.log("formData ready", formData.get("image"));  
+
 console.log("Uploading:", fileOrBlob);
 async function sendToServer(fileOrBlob) {
   stampPlaceholder.textContent = "SCANNING…";
