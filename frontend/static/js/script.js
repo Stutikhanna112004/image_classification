@@ -1,5 +1,5 @@
 const GAUGE_CIRCUMFERENCE = 251;
-
+const API_BASE_URL = "https://YOUR-APP-NAME.onrender.com"; // update after Render deploy
 const tabButtons = document.querySelectorAll(".tab-btn");
 const tabContents = document.querySelectorAll(".tab-content");
 const dropzone = document.getElementById("dropzone");
@@ -144,10 +144,10 @@ async function sendToServer(fileOrBlob) {
   formData.append("image", fileOrBlob, "capture.jpg");
 
   try {
-    const res = await fetch("/predict", {
+    const res = await fetch(`${API_BASE_URL}/predict`, {
       method: "POST",
       body: formData
-    });
+});
 
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || "Prediction failed");
