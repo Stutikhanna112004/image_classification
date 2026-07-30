@@ -1,5 +1,5 @@
 const GAUGE_CIRCUMFERENCE = 251;
-const API_BASE_URL = "https://YOUR-APP-NAME.onrender.com"; // update after Render deploy
+const API_BASE_URL = "https://image-classification-yp47.onrender.com/"; // update after Render deploy
 const tabButtons = document.querySelectorAll(".tab-btn");
 const tabContents = document.querySelectorAll(".tab-content");
 const dropzone = document.getElementById("dropzone");
