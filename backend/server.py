@@ -22,7 +22,7 @@ print("Model loaded.")
 
 def predict_image(pil_image: Image.Image):
     img = pil_image.convert("RGB").resize(IMG_SIZE)
-    img_array = np.array(img, dtype=np.float32) / 255.0
+    img_array = np.array(img, dtype=np.float32)  # no /255.0 — model's baked-in preprocess_input handles this
     img_array = np.expand_dims(img_array, axis=0)
 
     interpreter.set_tensor(input_details[0]["index"], img_array)
